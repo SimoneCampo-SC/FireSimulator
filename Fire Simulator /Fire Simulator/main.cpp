@@ -61,7 +61,6 @@ public:
     bool ifDeleted()
     {
         int randNumber = rand() % + 2;
-        cout << randNumber <<endl<<endl;
         if(randNumber == 0)
         {
             return false;
