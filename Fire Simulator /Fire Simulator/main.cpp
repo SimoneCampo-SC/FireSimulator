@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <ctime>
 
 using namespace std;
 
@@ -54,6 +55,20 @@ public:
         else
         {
             return false;
+        }
+    }
+    
+    bool ifDeleted()
+    {
+        int randNumber = rand() % + 2;
+        cout << randNumber <<endl<<endl;
+        if(randNumber == 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 };
@@ -231,25 +246,25 @@ public:
     void burnNeighorhood(int row, int column)
     {
         
-        if(list.elementExist(row, column - 1))
+        if(list.elementExist(row, column - 1) && list.getElement(row, (column - 1))->ifDeleted())
         {
             list.getElement(row, (column - 1))->setState('#');
             forestArray[row][column - 1] = '#';
         }
 
-        if(list.elementExist(row, column + 1))
+        if(list.elementExist(row, column + 1) && list.getElement(row, column + 1)->ifDeleted())
         {
             list.getElement(row, (column + 1))->setState('#');
             forestArray[row][column + 1] = '#';
         }
         
-        if(list.elementExist(row - 1, column))
+        if(list.elementExist(row - 1, column) && list.getElement(row - 1, column)->ifDeleted())
         {
             list.getElement((row - 1), column)->setState('#');
             forestArray[row - 1][column] = '#';
         }
 
-        if(list.elementExist(row + 1, column))
+        if(list.elementExist(row + 1, column) && list.getElement(row + 1, column)->ifDeleted())
         {
             list.getElement((row + 1), column)->setState('#');
             forestArray[row + 1][column] = '#';
@@ -274,14 +289,17 @@ int main()
     char value;
     bool end = false;
     int round = 1;
+    
+    srand(static_cast<unsigned int>(time(nullptr)));
+
     Forest forest;
     forest.initialiseForest();
-    
+
     while(end == false)
     {
         cout << "Round: " << round <<endl<<endl;
         forest.drawForest();
-        
+
         cout << endl;
         cout << "Press any key to continue or 'x' to exit..." << endl;
         cin >> value;
