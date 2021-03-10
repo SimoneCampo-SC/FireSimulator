@@ -135,6 +135,7 @@ public:
         }
         return NULL;
     }
+    
     void removeTree(int row, int column)
     {
         Tree* current = start;
@@ -167,6 +168,7 @@ public:
             }
         }
     }
+    
     void removeFirst()
     {
         Tree* current = start;
@@ -223,8 +225,10 @@ public:
         }
     }
     
-    void updateForest()
+    bool updateForest()
     {
+        bool finish = false;
+
         for (int i = 0; i < 21; i++)
         {
             for (int j = 0; j < 21; j++)
@@ -236,10 +240,15 @@ public:
                         burnNeighorhood(i, j);
                         list.removeTree(i, j);
                         forestArray[i][j] = ' ';
+                        if (finish == false)
+                        {
+                            finish = true;
+                        }
                     }
                 }
             }
         }
+        return finish;
     }
 
     void burnNeighorhood(int row, int column)
@@ -286,7 +295,7 @@ public:
 int main()
 {
     char value;
-    bool end = false;
+    bool end = false, finish = true;
     int round = 1;
     
     srand(static_cast<unsigned int>(time(nullptr)));
@@ -294,23 +303,36 @@ int main()
     Forest forest;
     forest.initialiseForest();
 
-    while(end == false)
+    while(end == false && finish == true)
     {
         cout << "Round: " << round <<endl<<endl;
         forest.drawForest();
 
         cout << endl;
-        cout << "Press any key to continue or 'x' to exit..." << endl;
-        cin >> value;
-        if (value == 'x')
+        cout << "Press enter to continue or 'x' to exit..." << endl;
+        value = cin.get();
+        
+        if(value == '\n')
         {
-            end = true;
+            finish = forest.updateForest();
+            round++;
+        }
+        else if (value != 'x')
+        {
+            cin.ignore();
         }
         else
         {
-            forest.updateForest();
-            round++;
+            end = true;
         }
+    }
+    if (finish == false)
+    {
+        cout << "Program ended: no more trees to burn" << endl << endl;
+    }
+    else
+    {
+        cout << "Program ended: key 'x' entered" << endl << endl;
     }
     return 0;
 }
