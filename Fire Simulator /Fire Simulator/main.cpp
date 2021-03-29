@@ -125,7 +125,7 @@ public:
         return false;
     }
     
-    int countElement()
+    int countElements()
     {
         int number = 0;
         Tree* current = start;
@@ -358,17 +358,29 @@ public:
 
 int main()
 {
-    char value;
+    char userChoice, value;
     bool end = false, finish = true;
     int round = 1;
     
     srand(static_cast<unsigned int>(time(nullptr)));
-
     Forest forest;
     forest.initialiseForest();
-
+    
+    cout << "Welcome to Tree Simulator" << '\n' << "----------------" << endl << endl;
+    cout << "Add wind and moisture effect to the simulation? [Y/N]: ";
+    cin >> userChoice;
+    if (tolower(userChoice) == 'y')
+    {
+        //
+    }
+    else
+    {
+        //
+    }
+    cin.ignore();
     while(end == false && finish == true)
     {
+        cout << "TREE SIMULATOR" << '\n' << "----------------" << endl << endl;
         cout << "LEGEND" << endl;
         cout << " - &: Tree alive" << '\n' << " - #: Burning Tree" << '\n'
              << " - ' ': Death Tree"<< '\n' << "----------------" << endl << endl;
@@ -404,8 +416,8 @@ int main()
     }
     cout << "STATISTICS:" << endl;
     cout << " - Total Rounds: " << round << endl << endl;
-    cout << " - Tree alive: " << forest.getList().countElement() << endl;
-    cout << " - Tree death: " << 361 - forest.getList().countElement() << endl;
+    cout << " - Tree alive: " << forest.getList().countElements() << endl;
+    cout << " - Tree death: " << 361 - forest.getList().countElements() << endl;
     if(forest.getList().countBurning() > 0)
     {
         cout << " - Tree burning: " << forest.getList().countBurning() << endl;
