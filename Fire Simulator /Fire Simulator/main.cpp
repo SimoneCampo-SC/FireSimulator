@@ -285,7 +285,7 @@ public:
         {
             for (int j = 0; j < 21; j++)
             {
-                cout << forestArray[i][j] << '\t';
+                cout << forestArray[i][j];
             }
             cout << endl;
         }
