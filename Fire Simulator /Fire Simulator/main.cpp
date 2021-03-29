@@ -370,7 +370,8 @@ int main()
     while(end == false && finish == true)
     {
         cout << "LEGEND" << endl;
-        cout << " - &: Tree alive" << '\n' << " - #: Burning Tree" << '\n' << "----------------" << endl << endl;
+        cout << " - &: Tree alive" << '\n' << " - #: Burning Tree" << '\n'
+             << " - ' ': Death Tree"<< '\n' << "----------------" << endl << endl;
         cout << "Round: " << round << endl << endl;
         forest.drawForest();
 
@@ -395,6 +396,7 @@ int main()
     if (finish == false)
     {
         cout << "Program ended:" << endl << endl;
+        round--;
     }
     else
     {
