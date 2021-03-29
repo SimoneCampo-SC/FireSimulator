@@ -8,10 +8,15 @@ class Tree
 {
 private:
     char state;
-    Tree* next = NULL;
-    int row, column;
+    Tree* next = NULL; // next object in the list
+    int row, column; // indexes in the 2D Array
     
 public:
+    ///<summary>
+    /// Default constructor creates a new tree object
+    ///<summary>
+    ///<param name="row">The row index of the tree position in the 2D Array </param>
+    ///<param name="column">The column index of the tree position in the 2D Array </param>
     Tree(int row, int column)
     {
         state = '&';
@@ -19,6 +24,12 @@ public:
         this->column = column;
     }
     
+    ///<summary>
+    /// Overloaded constructor creates a new tree object with no default state
+    ///<summary>
+    ///<param name="row">The row index of the tree position in the 2D Array </param>
+    ///<param name="column">The column index of the tree position in the 2D Array </param>
+    ///<param name="state">current state of the object</param>
     Tree(int row, int column, char state)
     {
         this->state = state;
@@ -46,6 +57,11 @@ public:
         return next;
     }
     
+    ///<summary>
+    /// Checks whether the object having those indexes exists in the list
+    ///<summary>
+    ///<param name="row">The row index of the tree position in the 2D Array </param>
+    ///<param name="column">The column index of the tree position in the 2D Array </param>
     bool checkCoordinates(int row, int column)
     {
         if ((this->row == row)&&(this->column == column))
@@ -58,6 +74,21 @@ public:
         }
     }
     
+    bool isBurning()
+    {
+        if(state == '#')
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    ///<summary>
+    /// Determines whether the tree object has to be deleted
+    ///<summary>
     bool ifDeleted()
     {
         int randNumber = rand() % + 2;
@@ -92,6 +123,34 @@ public:
             return true;
         }
         return false;
+    }
+    
+    int countElement()
+    {
+        int number = 0;
+        Tree* current = start;
+        
+        while(current != NULL)
+        {
+            number++;
+            current = current->getNext();
+        }
+        return number;
+    }
+    
+    int countBurning()
+    {
+        int number = 0;
+        Tree* current = start;
+        while (current != NULL)
+        {
+            if(current->isBurning())
+            {
+                number++;
+            }
+            current = current->getNext();
+        }
+        return number;
     }
     
     void addTree(Tree* object)
@@ -199,6 +258,12 @@ private:
     ListOfTrees list;
 
 public:
+    
+    ListOfTrees getList()
+    {
+        return list;
+    }
+
     void initialiseForest()
     {
         for (int i = 0; i < 21; i++)
@@ -253,7 +318,6 @@ public:
 
     void burnNeighorhood(int row, int column)
     {
-        
         if(list.elementExist(row, column - 1) && list.getElement(row, (column - 1))->ifDeleted())
         {
             list.getElement(row, (column - 1))->setState('#');
@@ -305,7 +369,9 @@ int main()
 
     while(end == false && finish == true)
     {
-        cout << "Round: " << round <<endl<<endl;
+        cout << "LEGEND" << endl;
+        cout << " - &: Tree alive" << '\n' << " - #: Burning Tree" << '\n' << "----------------" << endl << endl;
+        cout << "Round: " << round << endl << endl;
         forest.drawForest();
 
         cout << endl;
@@ -328,11 +394,23 @@ int main()
     }
     if (finish == false)
     {
-        cout << "Program ended: no more trees to burn" << endl << endl;
+        cout << "Program ended:" << endl << endl;
     }
     else
     {
-        cout << "Program ended: key 'x' entered" << endl << endl;
+        cout << "Program ended: key 'x' entered" << endl << endl;;
     }
+    cout << "STATISTICS:" << endl;
+    cout << " - Total Rounds: " << round << endl << endl;
+    cout << " - Tree alive: " << forest.getList().countElement() << endl;
+    cout << " - Tree death: " << 361 - forest.getList().countElement() << endl;
+    if(forest.getList().countBurning() > 0)
+    {
+        cout << " - Tree burning: " << forest.getList().countBurning() << endl;
+    }
+    cout << endl;
+    cout << "Press any key to end the program..." << endl;
+    cin.get();
+    
     return 0;
 }
