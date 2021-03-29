@@ -4,10 +4,44 @@
 
 using namespace std;
 
+class Wind
+{
+private:
+    string type;
+public:
+    Wind()
+    {
+        int randNumber = rand() % + 4;
+        
+        switch(randNumber)
+        {
+            case 0:
+                type = "North";
+                break;
+            case 1:
+                type = "South";
+                break;
+            case 2:
+                type = "East";
+                break;
+            case 3:
+                type = "West";
+                break;
+            default:
+                break;
+        }
+    }
+    string getType()
+    {
+        return type;
+    }
+};
+
 class Tree
 {
 private:
     char state;
+    bool wind;
     Tree* next = NULL; // next object in the list
     int row, column; // indexes in the 2D Array
     
@@ -22,6 +56,7 @@ public:
         state = '&';
         this->row = row;
         this->column = column;
+        wind = false;
     }
     
     ///<summary>
@@ -35,6 +70,17 @@ public:
         this->state = state;
         this->row = row;
         this->column = column;
+        wind = false;
+    }
+    
+    void setWind(bool value)
+    {
+        wind = value;
+    }
+    
+    bool getWind()
+    {
+        return wind;
     }
     
     void setState(char state)
@@ -91,14 +137,33 @@ public:
     ///<summary>
     bool ifDeleted()
     {
-        int randNumber = rand() % + 2;
-        if(randNumber == 0)
+        int randNumber;
+
+        if(wind == true)
         {
-            return false;
+            // 66% of probability to catch the fire
+            randNumber = rand() % + 3;
+            if(randNumber != 2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         else
         {
-            return true;
+            // 50% of probability to catch the fire
+            randNumber= rand() % + 2;
+            if(randNumber == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 };
@@ -315,6 +380,52 @@ public:
         }
         return finish;
     }
+    
+    string applyWind()
+    {
+        Wind wind;
+        if(wind.getType() == "North")
+        {
+            for(int i = 1; i <= 10; i++)
+            {
+                for(int j = 1; j < 20; j++)
+                {
+                    list.getElement(i, j)->setWind(true);
+                }
+            }
+        }
+        else if(wind.getType() == "South")
+        {
+            for(int i = 11; i < 20; i++)
+            {
+                for(int j = 1; j < 20; j++)
+                {
+                    list.getElement(i, j)->setWind(true);
+                }
+            }
+        }
+        else if(wind.getType() == "East")
+        {
+            for(int i = 1; i < 20; i++)
+            {
+                for(int j = 11; j < 20; j++)
+                {
+                    list.getElement(i, j)->setWind(true);
+                }
+            }
+        }
+        else if(wind.getType() == "West")
+        {
+            for(int i = 1; i < 20; i++)
+            {
+                for(int j = 1; j <= 10; j++)
+                {
+                    list.getElement(i, j)->setWind(true);
+                }
+            }
+        }
+        return wind.getType();
+    }
 
     void burnNeighorhood(int row, int column)
     {
@@ -358,6 +469,7 @@ public:
 
 int main()
 {
+    string wind;
     char userChoice, value;
     bool end = false, finish = true;
     int round = 1;
@@ -371,11 +483,7 @@ int main()
     cin >> userChoice;
     if (tolower(userChoice) == 'y')
     {
-        //
-    }
-    else
-    {
-        //
+        wind = forest.applyWind();
     }
     cin.ignore();
     while(end == false && finish == true)
@@ -383,7 +491,10 @@ int main()
         cout << "TREE SIMULATOR" << '\n' << "----------------" << endl << endl;
         cout << "LEGEND" << endl;
         cout << " - &: Tree alive" << '\n' << " - #: Burning Tree" << '\n'
-             << " - ' ': Death Tree"<< '\n' << "----------------" << endl << endl;
+             << " - ' ': Death Tree"<< '\n' << endl << endl;
+        cout << "IMPLEMENTATIONS: " << '\n' << " - Wind direction: " << wind
+             << '\n' << "----------------" << endl << endl;
+
         cout << "Round: " << round << endl << endl;
         forest.drawForest();
 
