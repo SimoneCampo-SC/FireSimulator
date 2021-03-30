@@ -42,9 +42,23 @@ class Tree
 {
 private:
     char state;
+    bool moisture;
     Tree* next = NULL; // next object in the list
     int row, column; // indexes in the 2D Array
-    
+
+    bool setMoisture()
+    {
+        int randNumber = rand() % + 2;
+        if(randNumber == 1)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 public:
 
     ///<summary>
@@ -52,11 +66,21 @@ public:
     ///<summary>
     ///<param name="row">The row index of the tree position in the 2D Array </param>
     ///<param name="column">The column index of the tree position in the 2D Array </param>
-    Tree(int row, int column)
+    Tree(int row, int column, bool moist)
     {
-        this->state = '&';
         this->row = row;
         this->column = column;
+        
+        if (moist == true && setMoisture())
+        {
+            this->moisture = true;
+            this->state = '@';
+        }
+        else
+        {
+            this->moisture = false;
+            this->state = '&';
+        }
     }
     
     ///<summary>
@@ -65,11 +89,20 @@ public:
     ///<param name="row">The row index of the tree position in the 2D Array </param>
     ///<param name="column">The column index of the tree position in the 2D Array </param>
     ///<param name="state">current state of the object</param>
-    Tree(int row, int column, char state)
+    Tree(int row, int column, char state, bool moist)
     {
         this->state = state;
         this->row = row;
         this->column = column;
+        
+        if (moist == true && setMoisture())
+        {
+            this->moisture = true;
+        }
+        else
+        {
+            this->moisture = false;
+        }
     }
     
     void setState(char state)
@@ -124,34 +157,30 @@ public:
     ///<summary>
     /// Determines whether the tree object has to be deleted
     ///<summary>
-    bool ifDeleted(int number)
+    bool ifDeleted(bool wind)
     {
-        int randNumber;
-        if(number == 1)
+        int probability;
+        int randNumber = rand() % 100 + 1;
+        cout << endl << endl;
+        if (moisture == true)
         {
-            // 75% of probability to catch the fire
-            randNumber = rand() % + 4;
-            if(randNumber != 3)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            probability = 30;
         }
         else
         {
-            // 50% of probability to catch the fire
-            randNumber= rand() % + 2;
-            if(randNumber == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            probability = 60;
+        }
+        if(wind == true)
+        {
+            probability += 25;
+        }
+        if(randNumber <= probability)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 };
@@ -317,7 +346,7 @@ public:
         return list;
     }
 
-    void initialiseForest()
+    void initialiseForest(bool moisture)
     {
         for (int i = 0; i < 21; i++)
         {
@@ -329,13 +358,13 @@ public:
                 }
                 else if ((i == 10) && (j == 10))
                 {
-                    Tree* tree = new Tree(i, j, '#');
+                    Tree* tree = new Tree(i, j, '#', moisture);
                     forestArray[i][j] = tree->getState();
                     list.addTree(tree);
                 }
                 else
                 {
-                    Tree* tree = new Tree(i, j);
+                    Tree* tree = new Tree(i, j, moisture);
                     forestArray[i][j] = tree->getState();
                     list.addTree(tree);
                 }
@@ -376,7 +405,7 @@ public:
         {
             if(wind == "West")
             {
-                if (list.getElement(row, (column - 1))->ifDeleted(1))
+                if (list.getElement(row, (column - 1))->ifDeleted(true))
                 {
                     list.getElement(row, (column - 1))->setState('#');
                     forestArray[row][column - 1] = '#';
@@ -384,7 +413,7 @@ public:
             }
             else
             {
-                if (list.getElement(row, (column - 1))->ifDeleted(0))
+                if (list.getElement(row, (column - 1))->ifDeleted(false))
                 {
                     list.getElement(row, (column - 1))->setState('#');
                     forestArray[row][column - 1] = '#';
@@ -397,7 +426,7 @@ public:
         {
             if(wind == "East")
             {
-                if(list.getElement(row, column + 1)->ifDeleted(1))
+                if(list.getElement(row, column + 1)->ifDeleted(true))
                 {
                     list.getElement(row, (column + 1))->setState('#');
                     forestArray[row][column + 1] = '#';
@@ -405,7 +434,7 @@ public:
             }
             else
             {
-                if(list.getElement(row, column + 1)->ifDeleted(0))
+                if(list.getElement(row, column + 1)->ifDeleted(false))
                 {
                     list.getElement(row, (column + 1))->setState('#');
                     forestArray[row][column + 1] = '#';
@@ -418,7 +447,7 @@ public:
         {
             if(wind == "North")
             {
-                if (list.getElement(row - 1, column)->ifDeleted(1))
+                if (list.getElement(row - 1, column)->ifDeleted(true))
                 {
                     list.getElement((row - 1), column)->setState('#');
                     forestArray[row - 1][column] = '#';
@@ -426,7 +455,7 @@ public:
             }
             else
             {
-                if (list.getElement(row - 1, column)->ifDeleted(0))
+                if (list.getElement(row - 1, column)->ifDeleted(false))
                 {
                     list.getElement((row - 1), column)->setState('#');
                     forestArray[row - 1][column] = '#';
@@ -439,7 +468,7 @@ public:
         {
             if(wind == "South")
             {
-                if (list.getElement(row + 1, column)->ifDeleted(1))
+                if (list.getElement(row + 1, column)->ifDeleted(true))
                 {
                     list.getElement((row + 1), column)->setState('#');
                     forestArray[row + 1][column] = '#';
@@ -447,7 +476,7 @@ public:
             }
             else
             {
-                if (list.getElement(row + 1, column)->ifDeleted(0))
+                if (list.getElement(row + 1, column)->ifDeleted(false))
                 {
                     list.getElement((row + 1), column)->setState('#');
                     forestArray[row + 1][column] = '#';
@@ -469,34 +498,55 @@ public:
     }
 };
 
-int main()
+bool chooseOption()
 {
-    char userChoice, value;
-    bool end = false, finish = true;
-    int round = 1;
-    
-    srand(static_cast<unsigned int>(time(nullptr)));
-    Wind wind;
-    Forest forest;
-    forest.initialiseForest();
+    char userChoice;
     
     cout << "Welcome to Fire Simulator" << '\n' << "----------------" << endl << endl;
     cout << "Add wind and moisture effect to the simulation? [Y/N]: ";
     cin >> userChoice;
     cin.ignore();
     cout << endl;
+
+    if(tolower(userChoice) == 'y')
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+void displayMenu(bool enhancement, Wind wind, int round)
+{
+    cout << "FIRE SIMULATOR" << '\n' << "----------------" << endl << endl;
+    cout << "LEGEND" << endl;
+    if(enhancement)
+    {
+        cout << " - Wind direction: " << wind.getType() << '\n' << " - @: Tree with most soil" << endl;
+    }
+    cout << " - #: Burning Tree" << '\n' << " - ' ': Death Tree" << '\n' << "----------------" << endl << endl;
+    cout << "Round: " << round << endl << endl;
+}
+
+int main()
+{
+    bool userChoice;
+    char value;
+    bool end = false, finish = true;
+    int round = 1;
+    
+    srand(static_cast<unsigned int>(time(nullptr)));
+    Wind wind;
+    Forest forest;
+    
+    userChoice = chooseOption();
+    
+    forest.initialiseForest(userChoice);
+    
     while(end == false && finish == true)
     {
-        cout << "FIRE SIMULATOR" << '\n' << "----------------" << endl << endl;
-        cout << "LEGEND" << endl;
-        cout << " - &: Tree alive" << '\n' << " - #: Burning Tree" << '\n'
-        << " - ' ': Death Tree" << '\n' << "----------------" << endl << endl;
-        if (tolower(userChoice) == 'y')
-        {
-            cout << "ENHANCEMENTS" << endl;
-            cout << " - Wind direction: " << wind.getType() << '\n' << "----------------" << endl << endl;
-        }
-        cout << "Round: " << round << endl << endl;
+        displayMenu(userChoice, wind, round);
         forest.drawForest();
 
         cout << endl;
@@ -505,7 +555,7 @@ int main()
         
         if(value == '\n')
         {
-            if (tolower(userChoice) == 'y')
+            if (userChoice)
             {
                 finish = forest.updateForest(wind.getType());
             }
