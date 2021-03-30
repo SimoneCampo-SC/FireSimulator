@@ -13,6 +13,7 @@ public:
     {
         int randNumber = rand() % + 4;
         
+        // Constructor randomly creates the type of wind
         switch(randNumber)
         {
             case 0:
@@ -41,11 +42,11 @@ class Tree
 {
 private:
     char state;
-    bool wind;
     Tree* next = NULL; // next object in the list
     int row, column; // indexes in the 2D Array
     
 public:
+
     ///<summary>
     /// Default constructor creates a new tree object
     ///<summary>
@@ -53,10 +54,9 @@ public:
     ///<param name="column">The column index of the tree position in the 2D Array </param>
     Tree(int row, int column)
     {
-        state = '&';
+        this->state = '&';
         this->row = row;
         this->column = column;
-        wind = false;
     }
     
     ///<summary>
@@ -70,17 +70,6 @@ public:
         this->state = state;
         this->row = row;
         this->column = column;
-        wind = false;
-    }
-    
-    void setWind(bool value)
-    {
-        wind = value;
-    }
-    
-    bool getWind()
-    {
-        return wind;
     }
     
     void setState(char state)
@@ -505,7 +494,7 @@ int main()
         if (tolower(userChoice) == 'y')
         {
             cout << "ENHANCEMENTS" << endl;
-            cout << "Wind direction: " << wind.getType() << '\n' << "----------------" << endl << endl;
+            cout << " - Wind direction: " << wind.getType() << '\n' << "----------------" << endl << endl;
         }
         cout << "Round: " << round << endl << endl;
         forest.drawForest();
