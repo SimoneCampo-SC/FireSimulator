@@ -168,11 +168,11 @@ public:
         }
         else
         {
-            probability = 60;
+            probability = 50;
         }
         if(wind == true)
         {
-            probability += 25;
+            probability += 35;
         }
         if(randNumber <= probability)
         {
@@ -401,7 +401,7 @@ public:
     void burnNeighorhood(int row, int column, string wind)
     {
         // tree to the left
-        if(list.elementExist(row, column - 1))
+        if(list.elementExist(row, column - 1) && list.getElement(row, column - 1)->getState() != '#')
         {
             if(wind == "West")
             {
@@ -422,7 +422,7 @@ public:
         }
         
         // tree to the right
-        if(list.elementExist(row, column + 1))
+        if(list.elementExist(row, column + 1) && list.getElement(row, column + 1)->getState() != '#')
         {
             if(wind == "East")
             {
@@ -443,7 +443,7 @@ public:
         }
         
         // upper tree
-        if(list.elementExist(row - 1, column))
+        if(list.elementExist(row - 1, column) && list.getElement(row - 1, column)->getState() != '#')
         {
             if(wind == "North")
             {
@@ -464,7 +464,7 @@ public:
         }
 
         // tree at the bottom
-        if(list.elementExist(row + 1, column))
+        if(list.elementExist(row + 1, column) && list.getElement(row + 1, column)->getState() != '#')
         {
             if(wind == "South")
             {
@@ -525,7 +525,7 @@ void displayMenu(bool enhancement, Wind wind, int round)
     {
         cout << " - Wind direction: " << wind.getType() << '\n' << " - @: Tree with most soil" << endl;
     }
-    cout << " - #: Burning Tree" << '\n' << " - ' ': Death Tree" << '\n' << "----------------" << endl << endl;
+    cout << " - &: Tree with dry soil" << '\n' << " - #: Burning Tree" << '\n' << " - ' ': Death Tree" << '\n' << "----------------" << endl << endl;
     cout << "Round: " << round << endl << endl;
 }
 
