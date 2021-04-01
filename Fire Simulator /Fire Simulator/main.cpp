@@ -8,10 +8,13 @@ class Wind
 {
 private:
     string type;
+    int speed;
 public:
     Wind()
     {
         int randNumber = rand() % + 4;
+        
+        this->speed = rand() % 26 + 10;
         
         // Constructor randomly creates the type of wind
         switch(randNumber)
@@ -35,6 +38,10 @@ public:
     string getType()
     {
         return type;
+    }
+    int getSpeed()
+    {
+        return speed;
     }
 };
 
@@ -157,7 +164,7 @@ public:
     ///<summary>
     /// Determines whether the tree object has to be deleted
     ///<summary>
-    bool ifDeleted(bool wind)
+    bool ifDeleted(Wind* wind)
     {
         int probability;
         int randNumber = rand() % 100 + 1;
@@ -170,9 +177,10 @@ public:
         {
             probability = 50;
         }
-        if(wind == true)
+        
+        if (wind != nullptr)
         {
-            probability += 35;
+            probability += wind->getSpeed();
         }
         if(randNumber <= probability)
         {
@@ -372,7 +380,7 @@ public:
         }
     }
     
-    bool updateForest(string wind)
+    bool updateForest(Wind* wind)
     {
         bool finish = false;
 
@@ -398,14 +406,14 @@ public:
         return finish;
     }
 
-    void burnNeighorhood(int row, int column, string wind)
+    void burnNeighorhood(int row, int column, Wind* wind)
     {
         // tree to the left
         if(list.elementExist(row, column - 1) && list.getElement(row, column - 1)->getState() != '#')
         {
-            if(wind == "West")
+            if(wind != nullptr && wind->getType() == "West")
             {
-                if (list.getElement(row, (column - 1))->ifDeleted(true))
+                if (list.getElement(row, (column - 1))->ifDeleted(wind))
                 {
                     list.getElement(row, (column - 1))->setState('#');
                     forestArray[row][column - 1] = '#';
@@ -413,7 +421,7 @@ public:
             }
             else
             {
-                if (list.getElement(row, (column - 1))->ifDeleted(false))
+                if (list.getElement(row, (column - 1))->ifDeleted(nullptr))
                 {
                     list.getElement(row, (column - 1))->setState('#');
                     forestArray[row][column - 1] = '#';
@@ -424,9 +432,9 @@ public:
         // tree to the right
         if(list.elementExist(row, column + 1) && list.getElement(row, column + 1)->getState() != '#')
         {
-            if(wind == "East")
+            if(wind != nullptr && wind->getType() == "East")
             {
-                if(list.getElement(row, column + 1)->ifDeleted(true))
+                if(list.getElement(row, column + 1)->ifDeleted(wind))
                 {
                     list.getElement(row, (column + 1))->setState('#');
                     forestArray[row][column + 1] = '#';
@@ -434,7 +442,7 @@ public:
             }
             else
             {
-                if(list.getElement(row, column + 1)->ifDeleted(false))
+                if(list.getElement(row, column + 1)->ifDeleted(nullptr))
                 {
                     list.getElement(row, (column + 1))->setState('#');
                     forestArray[row][column + 1] = '#';
@@ -445,9 +453,9 @@ public:
         // upper tree
         if(list.elementExist(row - 1, column) && list.getElement(row - 1, column)->getState() != '#')
         {
-            if(wind == "North")
+            if(wind != nullptr && wind->getType() == "North")
             {
-                if (list.getElement(row - 1, column)->ifDeleted(true))
+                if (list.getElement(row - 1, column)->ifDeleted(wind))
                 {
                     list.getElement((row - 1), column)->setState('#');
                     forestArray[row - 1][column] = '#';
@@ -455,7 +463,7 @@ public:
             }
             else
             {
-                if (list.getElement(row - 1, column)->ifDeleted(false))
+                if (list.getElement(row - 1, column)->ifDeleted(nullptr))
                 {
                     list.getElement((row - 1), column)->setState('#');
                     forestArray[row - 1][column] = '#';
@@ -466,9 +474,9 @@ public:
         // tree at the bottom
         if(list.elementExist(row + 1, column) && list.getElement(row + 1, column)->getState() != '#')
         {
-            if(wind == "South")
+            if(wind != nullptr && wind->getType() == "South")
             {
-                if (list.getElement(row + 1, column)->ifDeleted(true))
+                if (list.getElement(row + 1, column)->ifDeleted(wind))
                 {
                     list.getElement((row + 1), column)->setState('#');
                     forestArray[row + 1][column] = '#';
@@ -476,7 +484,7 @@ public:
             }
             else
             {
-                if (list.getElement(row + 1, column)->ifDeleted(false))
+                if (list.getElement(row + 1, column)->ifDeleted(nullptr))
                 {
                     list.getElement((row + 1), column)->setState('#');
                     forestArray[row + 1][column] = '#';
@@ -517,13 +525,15 @@ bool chooseOption()
         return false;
     }
 }
-void displayMenu(bool enhancement, Wind wind, int round)
+void displayMenu(Wind* wind, int round)
 {
     cout << "FIRE SIMULATOR" << '\n' << "----------------" << endl << endl;
     cout << "LEGEND" << endl;
-    if(enhancement)
+    if(wind != nullptr)
     {
-        cout << " - Wind direction: " << wind.getType() << '\n' << " - @: Tree with most soil" << endl;
+        cout << " - Wind direction: " << wind->getType() << '\n' << " - Wind speed: " << wind->getSpeed() << "Km/h"
+             << '\n' << " - @: Tree with most soil" << endl;
+
     }
     cout << " - &: Tree with dry soil" << '\n' << " - #: Burning Tree" << '\n' << " - ' ': Death Tree" << '\n' << "----------------" << endl << endl;
     cout << "Round: " << round << endl << endl;
@@ -537,16 +547,22 @@ int main()
     int round = 1;
     
     srand(static_cast<unsigned int>(time(nullptr)));
-    Wind wind;
+
+    Wind* wind = nullptr;
     Forest forest;
     
     userChoice = chooseOption();
+    
+    if(userChoice)
+    {
+        wind = new Wind();
+    }
     
     forest.initialiseForest(userChoice);
     
     while(end == false && finish == true)
     {
-        displayMenu(userChoice, wind, round);
+        displayMenu(wind, round);
         forest.drawForest();
 
         cout << endl;
@@ -555,14 +571,7 @@ int main()
         
         if(value == '\n')
         {
-            if (userChoice)
-            {
-                finish = forest.updateForest(wind.getType());
-            }
-            else
-            {
-                finish = forest.updateForest("NULL");
-            }
+            finish = forest.updateForest(wind);
             round++;
         }
         else if (value != 'x')
