@@ -171,13 +171,12 @@ public:
         cout << endl << endl;
         if (moisture == true)
         {
-            probability = 30;
+            probability = 40;
         }
         else
         {
-            probability = 50;
+            probability = 60;
         }
-        
         if (wind != nullptr)
         {
             probability += wind->getSpeed();
@@ -592,10 +591,10 @@ int main()
     {
         cout << "Program ended: key 'x' entered" << endl << endl;;
     }
-    cout << "STATISTICS:" << endl;
-    cout << " - Total Rounds: " << round << endl << endl;
-    cout << " - Tree alive: " << forest.getList().countElements() << endl;
-    cout << " - Tree death: " << 361 - forest.getList().countElements() << endl;
+    cout << "STATISTICS:" << '\n' << "----------------" << '\n'
+         << " - Total Rounds: " << round << '\n' << '\n'
+         << " - Tree alive: " << forest.getList().countElements() << '\n'
+         << " - Tree death: " << 361 - forest.getList().countElements() << endl;
     if(forest.getList().countBurning() > 0)
     {
         cout << " - Tree burning: " << forest.getList().countBurning() << endl;
