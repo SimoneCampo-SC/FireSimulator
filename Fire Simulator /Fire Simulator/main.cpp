@@ -16,11 +16,11 @@ public:
     /// </summary>
     Wind()
     {
-        int randNumber = rand() % +4;
+        int randNumber = rand() % + 4; // Random integer from 0 to 3
 
-        this->speed = rand() % 26 + 10;
+        this->speed = rand() % 26 + 10; // Random integer from 10 to 35
 
-        // Constructor randomly decides the direction of Wind
+        // Constructor assigns the direction of Wind according to the number randomly generated
         switch (randNumber)
         {
         case 0:
@@ -66,7 +66,9 @@ private:
     /// </summary>
     bool setMoisture()
     {
-        int randNumber = rand() % +2;
+        int randNumber = rand() % + 2; // Randomly either 0 or 1
+        
+        // 50% probability of returning true
         if (randNumber == 1)
         {
             return true;
@@ -180,6 +182,11 @@ public:
             return false;
         }
     }
+    
+    bool hasMoisture()
+    {
+        return moisture;
+    }
 
     ///<summary>
     /// Determines whether the tree object has to be deleted
@@ -251,7 +258,7 @@ public:
     /// <summary>
     /// Return the number of elements in the list
     /// </summary>
-    int countElements()
+    int countTrees()
     {
         int number = 0;
         Tree* current = start;
@@ -259,6 +266,22 @@ public:
         while (current != NULL)
         {
             number++;
+            current = current->getNext();
+        }
+        return number;
+    }
+    
+    int countMoisture()
+    {
+        int number = 0;
+        Tree* current = start;
+
+        while (current != NULL)
+        {
+            if(current->hasMoisture())
+            {
+                number++;
+            }
             current = current->getNext();
         }
         return number;
@@ -410,6 +433,11 @@ class Forest
 {
 private:
     char forestArray[21][21];
+    int totalTrees = 0, totalMoisture = 0, totalDry = 0;
+    int deadTrees = 0, deadMoisture = 0, deadDry = 0;
+    int liveTrees = 0, liveMoisture = 0, liveDry = 0;
+    int burningTrees = 0;
+    
     ListOfTrees list;
 
 public:
@@ -418,6 +446,66 @@ public:
     ListOfTrees getList()
     {
         return list;
+    }
+    
+    // Getter
+    int getTotalTrees()
+    {
+        return totalTrees;
+    }
+    
+    // Getter
+    int getTotalMoisture()
+    {
+        return totalMoisture;
+    }
+    
+    // Getter
+    int getTotalDry()
+    {
+        return totalDry;
+    }
+    
+    // Getter
+    int getDeadTrees()
+    {
+        return deadTrees;
+    }
+    
+    // Getter
+    int getDeadMoisture()
+    {
+        return deadMoisture;
+    }
+    
+    // Getter
+    int getDeadDry()
+    {
+        return deadDry;
+    }
+    
+    // Getter
+    int getLiveTrees()
+    {
+        return liveTrees;
+    }
+    
+    // Getter
+    int getLiveMoisture()
+    {
+        return liveMoisture;
+    }
+    
+    // Getter
+    int getLiveDry()
+    {
+        return liveDry;
+    }
+    
+    // Getter
+    int getBurningTrees()
+    {
+        return burningTrees;
     }
 
     /// <summary>
@@ -441,6 +529,14 @@ public:
                     Tree* tree = new Tree(i, j, '#', moisture);
                     forestArray[i][j] = tree->getState();
                     list.appendTree(tree);
+                    if(tree->hasMoisture())
+                    {
+                        totalMoisture++;
+                    }
+                    else
+                    {
+                        totalDry++;
+                    }
                 }
                 else
                 // Creates a default tree and add into the list
@@ -448,9 +544,18 @@ public:
                     Tree* tree = new Tree(i, j, moisture);
                     forestArray[i][j] = tree->getState();
                     list.appendTree(tree);
+                    if(tree->hasMoisture())
+                    {
+                        totalMoisture++;
+                    }
+                    else
+                    {
+                        totalDry++;
+                    }
                 }
             }
         }
+        totalTrees = totalDry + totalMoisture;
     }
     
     /// <summary>
@@ -478,6 +583,18 @@ public:
                     }
                 }
             }
+        }
+        if(finish == true)
+        {
+            liveTrees = list.countTrees();
+            liveMoisture = list.countMoisture();
+            liveDry = liveTrees - liveMoisture;
+            
+            deadTrees = totalTrees - liveTrees;
+            deadMoisture = totalMoisture - liveMoisture;
+            deadDry = totalDry - liveDry;
+            
+            burningTrees = list.countBurning();
         }
         return finish;
     }
@@ -629,7 +746,7 @@ public:
     static void displayMenu(Wind* wind, int round)
     {
         system("CLS");
-        cout << "FIRE SIMULATOR" << '\n' << "----------------" << endl << endl;
+        cout << "FIRE SIMULATOR\n----------------" << endl << endl;
         cout << "LEGEND" << endl;
         if (wind != nullptr)
         {
@@ -641,10 +758,10 @@ public:
         cout << "Round: " << round << endl << endl;
     }
     
-    static bool writeOnFile(Wind* wind, int round, int alive, int death, int burning)
+    static bool printStatistics(Wind* wind, Forest forest, int rounds, string fileName)
     {
         ofstream outFile;
-        outFile.open("statistics.txt");
+        outFile.open(fileName);
         
         if (outFile.is_open() == false)
         {
@@ -652,19 +769,52 @@ public:
         }
         else
         {
-            outFile << "STATISTICS" << '\n'
-                    << " - Total Rounds: " << to_string(round) << '\n';
-
-            if(wind != nullptr)
+            outFile << "FIRE SIMULATOR STATISTICS\n----------------\n"
+                    << " - Total Rounds: " << rounds << endl;
+            if(wind == nullptr)
             {
-                outFile << " - Wind direction: " << wind->getDirection() << '\n'
-                        << " - Wind speed: " << to_string(wind->getSpeed()) << "Km/h" << '\n';
+             outFile << " - Total Trees: " << forest.getTotalTrees() << '\n'
+                     << " - Dead Trees: " << forest.getDeadTrees() << '\n'
+                     << " - Live Trees: " << forest.getLiveTrees() << '\n'
+                     << " - Burning Trees: " << forest.getBurningTrees() << '\n';
             }
-            outFile << " - Trees alive: " << to_string(alive) << '\n'
-                    << " - Trees death: " << to_string(death) << '\n'
-                    << " - Trees burning: " << to_string(burning);
-            
-            outFile.close();
+            else
+            {
+             outFile << "\n1. WIND\n"
+                     << "\t - Direction: " << wind->getDirection() << '\n'
+                     << "\t - Speed: " << to_string(wind->getSpeed()) << " Km/h\n"
+                     << "\n2. TREES WITH DRY SOIL\n"
+                     << "\t - Total: " << forest.getTotalDry() << '\n'
+                     << "\t - Dead: " << forest.getDeadDry() << '\n'
+                     << "\t - Live: " << forest.getLiveDry() << '\n'
+                     << "\n3. TREES WITH MOIST SOIL\n"
+                     << "\t - Total: " << forest.getTotalMoisture() << '\n'
+                     << "\t - Dead: " << forest.getDeadMoisture() << '\n'
+                     << "\t - Live: " << forest.getLiveMoisture() << endl;
+                
+                outFile.close();
+            }
+            return true;
+        }
+    }
+    static bool readStatistics(string fileName)
+    {
+        ifstream inFile;
+        string line;
+        
+        inFile.open(fileName);
+        
+        if(inFile.is_open() == false)
+        {
+            return false;
+        }
+        else
+        {
+            while(getline(inFile, line))
+            {
+                cout << line << endl;
+            }
+            cout << endl;
             return true;
         }
     }
@@ -678,12 +828,12 @@ int main()
     int round = 1;
 
     srand(static_cast<unsigned int>(time(nullptr)));
-
+    
     Wind* wind = nullptr;
     Forest forest;
     
     cout << "Welcome to Fire Simulator" << '\n' << "----------------" << endl << endl;
-    userChoice = Program::chooseMode("Add wind and moisture effect to the simulation? [Y/N]: ");
+    userChoice = Program::chooseMode("Press 'y' to add wind and moisture effects to the simulation: ");
 
     // Initialise the Wind pointer only if the user wants to apply the wind to the simulation
     if (userChoice)
@@ -726,37 +876,22 @@ int main()
     {
         cout << "Program ended: key 'x' entered" << endl << endl;;
     }
-    system("CLS");
-
-    // Display statistics of the simulation
-    cout << "STATISTICS:" << '\n' << "----------------" << '\n';
-    cout << " - Total Rounds: " << round << '\n' << '\n';
-    if (wind != nullptr)
+    if (Program::printStatistics(wind, forest, round, "statistics.txt"))
     {
-        cout << " - Wind direction: " << wind->getDirection() << '\n'
-             << " - Wind speed: " << wind->getSpeed() << "Km/h" << '\n';
+        cout << "Statistics have been saved on a file called statistics.txt" << endl;
+        userChoice = Program::chooseMode("Press 'y' to read the file: ");
+        cout << endl;
+        if(userChoice)
+        {
+            if(!Program::readStatistics("statistics.txt"))
+            {
+                cout << "Error while opening statistics.txt file." << endl;
+            }
+        }
     }
-    cout << " - Tree alive: " << forest.getList().countElements() << '\n'
-         << " - Tree death: " << 361 - forest.getList().countElements() << '\n'
-         << " - Tree burning: " << forest.getList().countBurning() << endl;
-
-    cout << endl;
-    userChoice = Program::chooseMode("Do you want to print the statistics on a file? [Y/N]: ");
-    cout << endl;
-    
-    if(userChoice)
+    else
     {
-        bool successful = Program::writeOnFile(wind, round, forest.getList().countElements(),
-                                               361 - forest.getList().countElements(),
-                                               forest.getList().countBurning());
-        if(successful)
-        {
-            cout << "statistics.txt successfully created." << endl;
-        }
-        else
-        {
-            cout << "File could not be created." << endl;
-        }
+        cout << "Error while creating statistics.txt file." << endl;
     }
     cout << endl;
     cout << "Press any key to end the program..." << endl;

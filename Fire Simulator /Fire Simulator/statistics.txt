@@ -1,0 +1,17 @@
+FIRE SIMULATOR STATISTICS
+----------------
+ - Total Rounds: 27
+
+1. WIND
+	 - Direction: West
+	 - Speed: 27 Km/h
+
+2. TREES WITH DRY SOIL
+	 - Total: 180
+	 - Dead: 163
+	 - Live: 17
+
+3. TREES WITH MOIST SOIL
+	 - Total: 181
+	 - Dead: 137
+	 - Live: 44
