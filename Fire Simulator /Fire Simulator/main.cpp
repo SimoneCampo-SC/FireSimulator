@@ -441,12 +441,6 @@ private:
     ListOfTrees list;
 
 public:
-
-    // Getter
-    ListOfTrees getList()
-    {
-        return list;
-    }
     
     // Getter
     int getTotalTrees()
@@ -556,6 +550,10 @@ public:
             }
         }
         totalTrees = totalDry + totalMoisture;
+        liveTrees = totalTrees;
+        liveDry = totalDry;
+        liveMoisture = totalMoisture;
+        burningTrees = list.countBurning();
     }
     
     /// <summary>
@@ -584,18 +582,16 @@ public:
                 }
             }
         }
-        if(finish == true)
-        {
-            liveTrees = list.countTrees();
-            liveMoisture = list.countMoisture();
-            liveDry = liveTrees - liveMoisture;
+        liveTrees = list.countTrees();
+        liveMoisture = list.countMoisture();
+        liveDry = liveTrees - liveMoisture;
             
-            deadTrees = totalTrees - liveTrees;
-            deadMoisture = totalMoisture - liveMoisture;
-            deadDry = totalDry - liveDry;
+        deadTrees = totalTrees - liveTrees;
+        deadMoisture = totalMoisture - liveMoisture;
+        deadDry = totalDry - liveDry;
             
-            burningTrees = list.countBurning();
-        }
+        burningTrees = list.countBurning();
+ 
         return finish;
     }
 
@@ -719,23 +715,57 @@ public:
     /// Prompts the user to choose the simulator mode
     /// </summary>
     /// <returns>the user choice</returns>
+//    static bool chooseMode(string question)
+//    {
+//        char userChoice;
+//        cout << question;
+//        cin >> userChoice;
+//        cin.ignore();
+//        cout << endl;
+//
+//        if (tolower(userChoice) == 'y')
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
+    
+    /// <summary>
+    /// Prompts the user to choose the simulator mode
+    /// </summary>
+    /// <returns>the user choice</returns>
     static bool chooseMode(string question)
     {
         char userChoice;
-
-        cout << question;
-        cin >> userChoice;
-        cin.ignore();
-        cout << endl;
-
-        if (tolower(userChoice) == 'y')
+        bool AllOk = false;
+        do
         {
-            return true;
+            system("CLS");
+            cout << question;
+            cin >> userChoice;
+            cin.ignore();
+            switch(tolower(userChoice))
+            {
+                case 'y':
+                    AllOk = true;
+                    break;
+                    
+                case 'n':
+                    AllOk = false;
+                    break;
+                
+                default:
+                    userChoice = 'x';
+                    cout << "Not valid option" << endl;
+                    break;
+            }
         }
-        else
-        {
-            return false;
-        }
+        while(userChoice == 'x');
+        
+        return AllOk;
     }
 
     /// <summary>
@@ -770,7 +800,7 @@ public:
         else
         {
             outFile << "FIRE SIMULATOR STATISTICS\n----------------\n"
-                    << " - Total Rounds: " << rounds << endl;
+                    << "Total Rounds: " << rounds << endl;
             if(wind == nullptr)
             {
              outFile << " - Total Trees: " << forest.getTotalTrees() << '\n'
@@ -783,11 +813,13 @@ public:
              outFile << "\n1. WIND\n"
                      << "\t - Direction: " << wind->getDirection() << '\n'
                      << "\t - Speed: " << to_string(wind->getSpeed()) << " Km/h\n"
-                     << "\n2. TREES WITH DRY SOIL\n"
+                     << "\n2. BURNING TREES\n"
+                     << "\t - Total: " << forest.getBurningTrees() << '\n'
+                     << "\n3. TREES WITH DRY SOIL\n"
                      << "\t - Total: " << forest.getTotalDry() << '\n'
                      << "\t - Dead: " << forest.getDeadDry() << '\n'
                      << "\t - Live: " << forest.getLiveDry() << '\n'
-                     << "\n3. TREES WITH MOIST SOIL\n"
+                     << "\n4. TREES WITH MOIST SOIL\n"
                      << "\t - Total: " << forest.getTotalMoisture() << '\n'
                      << "\t - Dead: " << forest.getDeadMoisture() << '\n'
                      << "\t - Live: " << forest.getLiveMoisture() << endl;
