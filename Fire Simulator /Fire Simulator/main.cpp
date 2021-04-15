@@ -442,6 +442,60 @@ private:
 
 public:
     
+    /// <summary>
+    /// Initialise entire forest with boundary and burning tree at the center
+    /// </summary>
+    /// <param name="moisture"> true if the user wants to apply the moist soil </param>
+    Forest(bool moisture)
+    {
+        for (int i = 0; i < 21; i++)
+        {
+            for (int j = 0; j < 21; j++)
+            {
+                // If it is the boundary, do not create the object and add set the cell value a 0
+                if (i == 0 || j == 0 || i == 20 || j == 20)
+                {
+                    forestArray[i][j] = '0';
+                }
+                // If the cell is the center of the forest, creates a burning tree and add into the list
+                else if ((i == 10) && (j == 10))
+                {
+                    Tree* tree = new Tree(i, j, '#', moisture);
+                    forestArray[i][j] = tree->getState();
+                    list.appendTree(tree);
+                    if(tree->hasMoisture())
+                    {
+                        totalMoisture++;
+                    }
+                    else
+                    {
+                        totalDry++;
+                    }
+                }
+                else
+                // Creates a default tree and add into the list
+                {
+                    Tree* tree = new Tree(i, j, moisture);
+                    forestArray[i][j] = tree->getState();
+                    list.appendTree(tree);
+                    if(tree->hasMoisture())
+                    {
+                        totalMoisture++;
+                    }
+                    else
+                    {
+                        totalDry++;
+                    }
+                }
+            }
+        }
+        totalTrees = totalDry + totalMoisture;
+        liveTrees = totalTrees;
+        liveDry = totalDry;
+        liveMoisture = totalMoisture;
+        burningTrees = list.countBurning();
+    }
+    
     // Getter
     int getTotalTrees()
     {
@@ -500,60 +554,6 @@ public:
     int getBurningTrees()
     {
         return burningTrees;
-    }
-
-    /// <summary>
-    /// Initialise entire forest with boundary and burning tree at the center
-    /// </summary>
-    /// <param name="moisture"> true if the user wants to apply the moist soil </param>
-    void initialiseForest(bool moisture)
-    {
-        for (int i = 0; i < 21; i++)
-        {
-            for (int j = 0; j < 21; j++)
-            {
-                // If it is the boundary, do not create the object and add set the cell value a 0
-                if (i == 0 || j == 0 || i == 20 || j == 20)
-                {
-                    forestArray[i][j] = '0';
-                }
-                // If the cell is the center of the forest, creates a burning tree and add into the list
-                else if ((i == 10) && (j == 10))
-                {
-                    Tree* tree = new Tree(i, j, '#', moisture);
-                    forestArray[i][j] = tree->getState();
-                    list.appendTree(tree);
-                    if(tree->hasMoisture())
-                    {
-                        totalMoisture++;
-                    }
-                    else
-                    {
-                        totalDry++;
-                    }
-                }
-                else
-                // Creates a default tree and add into the list
-                {
-                    Tree* tree = new Tree(i, j, moisture);
-                    forestArray[i][j] = tree->getState();
-                    list.appendTree(tree);
-                    if(tree->hasMoisture())
-                    {
-                        totalMoisture++;
-                    }
-                    else
-                    {
-                        totalDry++;
-                    }
-                }
-            }
-        }
-        totalTrees = totalDry + totalMoisture;
-        liveTrees = totalTrees;
-        liveDry = totalDry;
-        liveMoisture = totalMoisture;
-        burningTrees = list.countBurning();
     }
     
     /// <summary>
@@ -743,7 +743,6 @@ public:
         bool AllOk = false;
         do
         {
-            system("CLS");
             cout << question;
             cin >> userChoice;
             cin.ignore();
@@ -759,6 +758,7 @@ public:
                 
                 default:
                     userChoice = 'x';
+                    system("CLS");
                     cout << "Not valid option" << endl;
                     break;
             }
@@ -862,10 +862,9 @@ int main()
     srand(static_cast<unsigned int>(time(nullptr)));
     
     Wind* wind = nullptr;
-    Forest forest;
     
     cout << "Welcome to Fire Simulator" << '\n' << "----------------" << endl << endl;
-    userChoice = Program::chooseMode("Press 'y' to add wind and moisture effects to the simulation: ");
+    userChoice = Program::chooseMode("Do you want to add wind and moisture effects to the simulation? [Y/N]: ");
 
     // Initialise the Wind pointer only if the user wants to apply the wind to the simulation
     if (userChoice)
@@ -873,7 +872,7 @@ int main()
         wind = new Wind();
     }
 
-    forest.initialiseForest(userChoice);
+    Forest forest(userChoice);
 
     // As long as the user click 'x' or there are no more burning trees
     while (end == false && finish == false)
@@ -911,7 +910,7 @@ int main()
     if (Program::printStatistics(wind, forest, round, "statistics.txt"))
     {
         cout << "Statistics have been saved on a file called statistics.txt" << endl;
-        userChoice = Program::chooseMode("Press 'y' to read the file: ");
+        userChoice = Program::chooseMode("do you want to read Press the file? [Y/N] ");
         cout << endl;
         if(userChoice)
         {
