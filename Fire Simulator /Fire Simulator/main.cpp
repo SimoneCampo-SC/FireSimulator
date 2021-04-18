@@ -24,7 +24,7 @@ int main()
     // Initialise the Wind pointer only if the user wants to apply the wind to the simulation
     if (userChoice)
     {
-        wind = new Wind();
+        wind = Wind::getWind();
     }
 
     Forest forest(userChoice);

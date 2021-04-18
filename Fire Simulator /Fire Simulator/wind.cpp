@@ -1,5 +1,6 @@
 #include "wind.h"
 
+Wind* Wind::_pointer = nullptr; // out of line definition of static pointer
 Wind::Wind()
 {
     int randNumber = rand() % +4; // Random integer from 0 to 3
@@ -24,6 +25,18 @@ Wind::Wind()
             break;
             
     }
+}
+
+/// <summary>
+/// return the static instance and initialise only if it has not been already defined
+/// </summary>
+Wind* Wind::getWind()
+{
+    if(_pointer == nullptr)
+    {
+        _pointer = new Wind();
+    }
+    return _pointer;
 }
 
 string Wind::getDirection(void) // Getter
