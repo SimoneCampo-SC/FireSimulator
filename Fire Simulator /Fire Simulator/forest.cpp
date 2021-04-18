@@ -26,7 +26,7 @@ Forest::Forest(bool moisture)
             {
                 Tree* tree = new Tree(i, j, '#', moisture);
                 forestArray[i][j] = tree->getState();
-                list.appendTree(tree);
+                list->appendTree(tree);
                 if (tree->getMoisture())
                 {
                     totalMoisture++;
@@ -40,7 +40,7 @@ Forest::Forest(bool moisture)
             {
                 Tree* tree = new Tree(i, j, moisture);
                 forestArray[i][j] = tree->getState();
-                list.appendTree(tree);
+                list->appendTree(tree);
                 if (tree->getMoisture())
                 {
                     totalMoisture++;
@@ -57,7 +57,7 @@ Forest::Forest(bool moisture)
     liveTrees = totalTrees;
     liveDry = totalDry;
     liveMoisture = totalMoisture;
-    burningTrees = list.countBurning();
+    burningTrees = list->countBurning();
 }
 
 /// <summary>
@@ -150,7 +150,7 @@ bool Forest::updateForest(Wind* wind)
             if (forestArray[i][j] == '#')
             {
                 burnNeighbour(i, j, wind);
-                list.removeTree(i, j);
+                list->removeTree(i, j);
                 forestArray[i][j] = ' ';
                 if (finish == true)
                 {
@@ -161,15 +161,15 @@ bool Forest::updateForest(Wind* wind)
     }
     
     // Update counters each time the forest is updated
-    liveTrees = list.countTrees();
-    liveMoisture = list.countMoisture();
+    liveTrees = list->countTrees();
+    liveMoisture = list->countMoisture();
     liveDry = liveTrees - liveMoisture;
     
     deadTrees = totalTrees - liveTrees;
     deadMoisture = totalMoisture - liveMoisture;
     deadDry = totalDry - liveDry;
     
-    burningTrees = list.countBurning();
+    burningTrees = list->countBurning();
     
     return finish;
 }
@@ -184,87 +184,87 @@ void Forest::burnNeighbour(int row, int column, Wind* wind)
 {
     // tree on the left
     // If it exists and if it is not burning
-    if (list.elementExist(row, column - 1) && list.getElement(row, column - 1)->getState() != '#')
+    if (list->elementExist(row, column - 1) && list->getElement(row, column - 1)->getState() != '#')
     {
         // Pass the pointer only if it is initialised and if the direction is West
         if (wind != nullptr && wind->getDirection() == "West")
         {
-            if (list.getElement(row, (column - 1))->ifDeleted(wind))
+            if (list->getElement(row, (column - 1))->ifDeleted(wind))
             {
-                list.getElement(row, (column - 1))->setState('#');
+                list->getElement(row, (column - 1))->setState('#');
                 forestArray[row][column - 1] = '#';
             }
         }
         else
         {
-            if (list.getElement(row, (column - 1))->ifDeleted(nullptr))
+            if (list->getElement(row, (column - 1))->ifDeleted(nullptr))
             {
-                list.getElement(row, (column - 1))->setState('#');
+                list->getElement(row, (column - 1))->setState('#');
                 forestArray[row][column - 1] = '#';
             }
         }
     }
     
     // tree on the right
-    if (list.elementExist(row, column + 1) && list.getElement(row, column + 1)->getState() != '#')
+    if (list->elementExist(row, column + 1) && list->getElement(row, column + 1)->getState() != '#')
     {
         // Pass the pointer only if it is initialised and if the direction is East
         if (wind != nullptr && wind->getDirection() == "East")
         {
-            if (list.getElement(row, column + 1)->ifDeleted(wind))
+            if (list->getElement(row, column + 1)->ifDeleted(wind))
             {
-                list.getElement(row, (column + 1))->setState('#');
+                list->getElement(row, (column + 1))->setState('#');
                 forestArray[row][column + 1] = '#';
             }
         }
         else
         {
-            if (list.getElement(row, column + 1)->ifDeleted(nullptr))
+            if (list->getElement(row, column + 1)->ifDeleted(nullptr))
             {
-                list.getElement(row, (column + 1))->setState('#');
+                list->getElement(row, (column + 1))->setState('#');
                 forestArray[row][column + 1] = '#';
             }
         }
     }
     // upper tree
-    if (list.elementExist(row - 1, column) && list.getElement(row - 1, column)->getState() != '#')
+    if (list->elementExist(row - 1, column) && list->getElement(row - 1, column)->getState() != '#')
     {
         // Pass the pointer only if it is initialised and if the direction is North
         if (wind != nullptr && wind->getDirection() == "North")
         {
-            if (list.getElement(row - 1, column)->ifDeleted(wind))
+            if (list->getElement(row - 1, column)->ifDeleted(wind))
             {
-                list.getElement((row - 1), column)->setState('#');
+                list->getElement((row - 1), column)->setState('#');
                 forestArray[row - 1][column] = '#';
             }
         }
         else
         {
-            if (list.getElement(row - 1, column)->ifDeleted(nullptr))
+            if (list->getElement(row - 1, column)->ifDeleted(nullptr))
             {
-                list.getElement((row - 1), column)->setState('#');
+                list->getElement((row - 1), column)->setState('#');
                 forestArray[row - 1][column] = '#';
             }
         }
     }
     
     // bottom tree
-    if (list.elementExist(row + 1, column) && list.getElement(row + 1, column)->getState() != '#')
+    if (list->elementExist(row + 1, column) && list->getElement(row + 1, column)->getState() != '#')
     {
         // Pass the pointer only if it is initialised and if the direction is South
         if (wind != nullptr && wind->getDirection() == "South")
         {
-            if (list.getElement(row + 1, column)->ifDeleted(wind))
+            if (list->getElement(row + 1, column)->ifDeleted(wind))
             {
-                list.getElement((row + 1), column)->setState('#');
+                list->getElement((row + 1), column)->setState('#');
                 forestArray[row + 1][column] = '#';
             }
         }
         else
         {
-            if (list.getElement(row + 1, column)->ifDeleted(nullptr))
+            if (list->getElement(row + 1, column)->ifDeleted(nullptr))
             {
-                list.getElement((row + 1), column)->setState('#');
+                list->getElement((row + 1), column)->setState('#');
                 forestArray[row + 1][column] = '#';
             }
         }

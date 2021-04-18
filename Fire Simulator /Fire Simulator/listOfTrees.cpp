@@ -1,4 +1,7 @@
 #include "listOfTrees.h"
+
+ListOfTrees* ListOfTrees::_pointer = nullptr; // out of line definition of static pointer
+
 /// <summary>
 /// Default constructor of the list
 /// </summary>
@@ -6,6 +9,18 @@ ListOfTrees::ListOfTrees(void)
 {
     start = NULL;
     end = NULL;
+}
+
+/// <summary>
+/// return the static instance and initialise only if it has not been already defined
+/// </summary>
+ListOfTrees* ListOfTrees::getList()
+{
+    if(_pointer == nullptr)
+    {
+        _pointer = new ListOfTrees();
+    }
+    return _pointer;
 }
 
 /// <summary>

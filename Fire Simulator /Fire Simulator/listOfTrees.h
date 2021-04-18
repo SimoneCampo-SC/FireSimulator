@@ -8,12 +8,20 @@ private:
     Tree* start; // first element in the Linked List
     Tree* end;  // last element in the Linked List
 
-public:
+    static ListOfTrees* _pointer; // private static pointer
+
     /// <summary>
-    /// Default constructor of the list
+    /// Private  constructor of the linked list
     /// </summary>
     ListOfTrees(void);
 
+public:
+    
+    /// <summary>
+    /// return the static instance and initialise only if it has not been already defined
+    /// </summary>
+    static ListOfTrees* getList();
+    
     /// <summary>
     /// Return true when the list is empty
     /// </summary>

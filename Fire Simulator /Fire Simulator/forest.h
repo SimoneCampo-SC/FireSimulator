@@ -14,7 +14,7 @@ private:
     int liveTrees = 0, liveMoisture = 0, liveDry = 0;
     int burningTrees = 0;
 
-    ListOfTrees list;
+    ListOfTrees* list = ListOfTrees::getList();
     static Forest* _pointer;
 
     /// <summary>
