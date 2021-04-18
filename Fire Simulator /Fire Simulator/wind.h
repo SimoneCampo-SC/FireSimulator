@@ -9,7 +9,7 @@ private:
     static Wind* _pointer; // private static pointer
     string direction; // Either North, South, East and West
     int speed; // Velocity in Km/h
-    Wind(void); // Public constructor
+    Wind(void); // Private constructor
     
 public:
     /// <summary>
