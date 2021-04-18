@@ -27,13 +27,13 @@ int main()
         wind = Wind::getWind();
     }
 
-    Forest forest(userChoice);
+    Forest* forest = Forest::getForest(userChoice);
 
     // As long as the user click 'x' or there are no more burning trees
     while (end == false && finish == false)
     {
         Program::displayMenu(wind, round);
-        forest.drawForest();
+        forest->drawForest();
 
         cout << endl;
         cout << "Press enter to continue or 'x' to exit..." << endl;
@@ -41,7 +41,7 @@ int main()
 
         if (value == '\n')
         {
-            finish = forest.updateForest(wind);
+            finish = forest->updateForest(wind);
             round++;
         }
         else if (tolower(value) != 'x')

@@ -67,7 +67,7 @@ void Program::displayMenu(Wind* wind, int round)
 /// <param name="rounds">number of rounds played</param>
 /// <param name="fileName">name of the file which is intended to create / open</param>
 /// <returns>true if statistics have been written, false if the connection have not been opened</returns>
-bool Program::printStatistics(Wind* wind, Forest forest, int rounds, string fileName)
+bool Program::printStatistics(Wind* wind, Forest* forest, int rounds, string fileName)
 {
     ofstream outFile;
     outFile.open(fileName); // open connection
@@ -82,10 +82,10 @@ bool Program::printStatistics(Wind* wind, Forest forest, int rounds, string file
         << "Total Rounds: " << rounds << endl;
         if (wind == nullptr)
         {
-            outFile << " - Total Trees: " << forest.getTotalTrees() << '\n'
-            << " - Dead Trees: " << forest.getDeadTrees() << '\n'
-            << " - Live Trees: " << forest.getLiveTrees() << '\n'
-            << " - Burning Trees: " << forest.getBurningTrees() << '\n';
+            outFile << " - Total Trees: " << forest->getTotalTrees() << '\n'
+            << " - Dead Trees: " << forest->getDeadTrees() << '\n'
+            << " - Live Trees: " << forest->getLiveTrees() << '\n'
+            << " - Burning Trees: " << forest->getBurningTrees() << '\n';
         }
         else
         {
@@ -93,15 +93,15 @@ bool Program::printStatistics(Wind* wind, Forest forest, int rounds, string file
             << "\t - Direction: " << wind->getDirection() << '\n'
             << "\t - Speed: " << wind->getSpeed() << " Km/h\n"
             << "\n2. BURNING TREES\n"
-            << "\t - Total: " << forest.getBurningTrees() << '\n'
+            << "\t - Total: " << forest->getBurningTrees() << '\n'
             << "\n3. TREES WITH DRY SOIL\n"
-            << "\t - Total: " << forest.getTotalDry() << '\n'
-            << "\t - Dead: " << forest.getDeadDry() << '\n'
-            << "\t - Live: " << forest.getLiveDry() << '\n'
+            << "\t - Total: " << forest->getTotalDry() << '\n'
+            << "\t - Dead: " << forest->getDeadDry() << '\n'
+            << "\t - Live: " << forest->getLiveDry() << '\n'
             << "\n4. TREES WITH MOIST SOIL\n"
-            << "\t - Total: " << forest.getTotalMoisture() << '\n'
-            << "\t - Dead: " << forest.getDeadMoisture() << '\n'
-            << "\t - Live: " << forest.getLiveMoisture() << endl;
+            << "\t - Total: " << forest->getTotalMoisture() << '\n'
+            << "\t - Dead: " << forest->getDeadMoisture() << '\n'
+            << "\t - Live: " << forest->getLiveMoisture() << endl;
             
             outFile.close(); // close connection
         }

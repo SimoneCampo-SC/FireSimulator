@@ -15,16 +15,22 @@ private:
     int burningTrees = 0;
 
     ListOfTrees list;
-
-public:
+    static Forest* _pointer;
 
     /// <summary>
-    /// Private constructor initialise the forest with boundary and burning tree at the center
+    /// Private constructor initialise forest with boundary and burning tree at the center
     /// Set the counters attributes of the forest
     /// </summary>
     /// <param name="moisture"> true if the user wants to apply the moist soil </param>
     Forest(bool moisture);
-
+    
+public:
+    /// <summary>
+    /// return the static instance and initialise only if it has not been already defined
+    /// </summary>
+    /// <param name="moisture"> true if the user wants to apply the moist soil </param>
+    static Forest* getForest(bool moisture);
+    
     // Getter
     int getTotalTrees(void);
 

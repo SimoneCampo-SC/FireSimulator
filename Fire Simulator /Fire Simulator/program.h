@@ -31,7 +31,7 @@ public:
     /// <param name="rounds">number of rounds played</param>
     /// <param name="fileName">name of the file which is intended to create / open</param>
     /// <returns>true if statistics have been written, false if the connection have not been opened</returns>
-    static bool printStatistics(Wind* wind, Forest forest, int rounds, string fileName);
+    static bool printStatistics(Wind* wind, Forest* forest, int rounds, string fileName);
 
     /// <summary>
     /// read the file

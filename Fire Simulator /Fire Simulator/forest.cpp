@@ -3,8 +3,10 @@
 
 using namespace std;
 
+Forest* Forest::_pointer = nullptr; // out of line definition of static pointer
+
 /// <summary>
-/// Initialise forest with boundary and burning tree at the center
+/// Private constructor initialise forest with boundary and burning tree at the center
 /// Set the counters attributes of the forest
 /// </summary>
 /// <param name="moisture"> true if the user wants to apply the moist soil </param>
@@ -56,6 +58,19 @@ Forest::Forest(bool moisture)
     liveDry = totalDry;
     liveMoisture = totalMoisture;
     burningTrees = list.countBurning();
+}
+
+/// <summary>
+/// return the static instance and initialise only if it has not been already defined
+/// </summary>
+/// <param name="moisture"> true if the user wants to apply the moist soil </param>
+Forest* Forest::getForest(bool moisture)
+{
+    if(_pointer == nullptr)
+    {
+        _pointer = new Forest(moisture);
+    }
+    return _pointer;
 }
 
 // Getter
