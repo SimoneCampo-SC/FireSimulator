@@ -7,10 +7,10 @@ class Wind
 {
 private:
     static Wind* _pointer; // private static pointer
-    string direction; // Either North, South, East and West
+    string direction; // North, South, East and West
     int speed; // Velocity in Km/h
     Wind(void); // Private constructor
-    
+
 public:
     /// <summary>
     /// return the static instance and initialise only if it has not been already defined
@@ -20,3 +20,4 @@ public:
     int getSpeed(void); // Getter
 };
 #endif
+

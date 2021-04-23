@@ -5,18 +5,13 @@ using namespace std;
 
 Forest* Forest::_pointer = nullptr; // out of line definition of static pointer
 
-/// <summary>
-/// Private constructor initialise forest with boundary and burning tree at the center
-/// Set the counters attributes of the forest
-/// </summary>
-/// <param name="moisture"> true if the user wants to apply the moist soil </param>
 Forest::Forest(bool moisture)
 {
     for (int i = 0; i < 21; i++)
     {
         for (int j = 0; j < 21; j++)
         {
-            // If it is the boundary, do not create the object and add set the cell value a 0
+            // Draw the boundaries and do not create the object
             if (i == 0 || j == 0 || i == 20 || j == 20)
             {
                 forestArray[i][j] = '0';
@@ -52,7 +47,7 @@ Forest::Forest(bool moisture)
             }
         }
     }
-    // set counters
+    // when the forest has initialised, it sets the counters
     totalTrees = totalDry + totalMoisture;
     liveTrees = totalTrees;
     liveDry = totalDry;
@@ -60,130 +55,75 @@ Forest::Forest(bool moisture)
     burningTrees = list->countBurning();
 }
 
-/// <summary>
-/// return the static instance and initialise only if it has not been already defined
-/// </summary>
-/// <param name="moisture"> true if the user wants to apply the moist soil </param>
 Forest* Forest::getForest(bool moisture)
 {
-    if(_pointer == nullptr)
+    // Execute the constructor only if the static pointer has not been initialised
+    if (_pointer == nullptr)
     {
         _pointer = new Forest(moisture);
     }
     return _pointer;
 }
 
-// Getter
-int Forest::getTotalTrees(void)
-{
-    return totalTrees;
-}
+int Forest::getTotalTrees(void) { return totalTrees; }
 
-// Getter
-int Forest::getTotalMoisture(void)
-{
-    return totalMoisture;
-}
+int Forest::getTotalMoisture(void) { return totalMoisture; }
 
-// Getter
-int Forest::getTotalDry(void)
-{
-    return totalDry;
-}
+int Forest::getTotalDry(void) { return totalDry; }
 
-// Getter
-int Forest::getDeadTrees(void)
-{
-    return deadTrees;
-}
+int Forest::getDeadTrees(void) { return deadTrees; }
 
-// Getter
-int Forest::getDeadMoisture(void)
-{
-    return deadMoisture;
-}
+int Forest::getDeadMoisture(void) { return deadMoisture; }
 
-// Getter
-int Forest::getDeadDry(void)
-{
-    return deadDry;
-}
+int Forest::getDeadDry(void) { return deadDry; }
 
-// Getter
-int Forest::getLiveTrees(void)
-{
-    return liveTrees;
-}
+int Forest::getLiveTrees(void) { return liveTrees; }
 
-// Getter
-int Forest::getLiveMoisture(void)
-{
-    return liveMoisture;
-}
+int Forest::getLiveMoisture(void) { return liveMoisture; }
 
-// Getter
-int Forest::getLiveDry(void)
-{
-    return liveDry;
-}
+int Forest::getLiveDry(void) { return liveDry; }
 
-// Getter
-int Forest::getBurningTrees(void)
-{
-    return burningTrees;
-}
+int Forest::getBurningTrees(void) { return burningTrees; }
 
-/// <summary>
-/// Update the state of the trees in the forest
-/// </summary>
-/// <param name="wind"></param>
-/// <returns> false when at least one tree has been removed </returns>
 bool Forest::updateForest(Wind* wind)
 {
     bool finish = true;
-    
-    // Move through the forest
+
+    // Iterate through the forest
     for (int i = 0; i < 21; i++)
     {
         for (int j = 0; j < 21; j++)
         {
+            // If tree is burning, remove it from the list, burn its neighbours and set the array's cell as empty
             if (forestArray[i][j] == '#')
             {
                 burnNeighbour(i, j, wind);
                 list->removeTree(i, j);
                 forestArray[i][j] = ' ';
-                if (finish == true)
-                {
-                    finish = false;
-                }
+                finish = false; // set to false as more trees ha
             }
         }
     }
-    
+
     // Update counters each time the forest is updated
     liveTrees = list->countTrees();
     liveMoisture = list->countMoisture();
     liveDry = liveTrees - liveMoisture;
-    
+
     deadTrees = totalTrees - liveTrees;
     deadMoisture = totalMoisture - liveMoisture;
     deadDry = totalDry - liveDry;
-    
+
     burningTrees = list->countBurning();
-    
+
     return finish;
 }
 
-/// <summary>
-/// Burn neighborhoods of a tree whose location is passed by parameters
-/// </summary>
-///<param name="row"> The row index of the tree position in the 2D Array </param>
-///<param name="column"> The column index of the tree position in the 2D Array </param>
-/// <param name="wind"> Pointer to a wind object </param>
 void Forest::burnNeighbour(int row, int column, Wind* wind)
 {
+
     // tree on the left
-    // If it exists and if it is not burning
+    // If it exists and it is not burning
     if (list->elementExist(row, column - 1) && list->getElement(row, column - 1)->getState() != '#')
     {
         // Pass the pointer only if it is initialised and if the direction is West
@@ -204,8 +144,9 @@ void Forest::burnNeighbour(int row, int column, Wind* wind)
             }
         }
     }
-    
+
     // tree on the right
+    // If it exists and it is not burning
     if (list->elementExist(row, column + 1) && list->getElement(row, column + 1)->getState() != '#')
     {
         // Pass the pointer only if it is initialised and if the direction is East
@@ -226,7 +167,9 @@ void Forest::burnNeighbour(int row, int column, Wind* wind)
             }
         }
     }
-    // upper tree
+
+    // Upper tree
+    // If it exists and it is not burning
     if (list->elementExist(row - 1, column) && list->getElement(row - 1, column)->getState() != '#')
     {
         // Pass the pointer only if it is initialised and if the direction is North
@@ -247,8 +190,9 @@ void Forest::burnNeighbour(int row, int column, Wind* wind)
             }
         }
     }
-    
-    // bottom tree
+
+    // Bottom tree
+    // If it exists and it is not burning
     if (list->elementExist(row + 1, column) && list->getElement(row + 1, column)->getState() != '#')
     {
         // Pass the pointer only if it is initialised and if the direction is South
@@ -271,9 +215,6 @@ void Forest::burnNeighbour(int row, int column, Wind* wind)
     }
 }
 
-/// <summary>
-/// Display the 2D forest on the console
-/// </summary>
 void Forest::drawForest(void)
 {
     for (int i = 0; i < 21; i++)

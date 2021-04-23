@@ -11,9 +11,10 @@ class Program
 public:
 
     /// <summary>
-    /// prompts the user a question and return either true or false
+    /// Display a question to the user and gets the answer which can be either Yes or No
     /// </summary>
-    /// <param name="question">question to ask the user for</param>
+    /// <param name="question"> question to answer to the user</param>
+    /// <returns>True if Yes or False if No</returns>
     static bool chooseMode(string question);
 
     /// <summary>
@@ -29,7 +30,7 @@ public:
     /// <param name="wind">pointer to a wind object</param>
     /// <param name="forest">forest initialised in Main</param>
     /// <param name="rounds">number of rounds played</param>
-    /// <param name="fileName">name of the file which is intended to create / open</param>
+    /// <param name="fileName">name of the file where is intended to create / open</param>
     /// <returns>true if statistics have been written, false if the connection have not been opened</returns>
     static bool printStatistics(Wind* wind, Forest* forest, int rounds, string fileName);
 
@@ -41,3 +42,4 @@ public:
     static bool readStatistics(string fileName);
 };
 #endif
+

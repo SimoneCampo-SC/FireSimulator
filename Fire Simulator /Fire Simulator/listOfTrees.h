@@ -5,23 +5,23 @@
 class ListOfTrees
 {
 private:
-    Tree* start; // first element in the Linked List
-    Tree* end;  // last element in the Linked List
+    Tree* start; // First element in the Linked List
+    Tree* end;  // Last element in the Linked List
 
-    static ListOfTrees* _pointer; // private static pointer
+    static ListOfTrees* _pointer; // Private static pointer
 
     /// <summary>
-    /// Private  constructor of the linked list
+    /// Private constructor initialise the linked list data structure
     /// </summary>
     ListOfTrees(void);
 
 public:
-    
+
     /// <summary>
-    /// return the static instance and initialise only if it has not been already defined
+    /// Return the static instance and initialise only if it has not been already defined
     /// </summary>
     static ListOfTrees* getList();
-    
+
     /// <summary>
     /// Return true when the list is empty
     /// </summary>
@@ -66,8 +66,8 @@ public:
     /// <summary>
     /// Remove a tree object from the list
     /// </summary>
-    ///<param name="row">The row index of the tree position in the 2D Array </param>
-    ///<param name="column">The column index of the tree position in the 2D Array </param>
+    ///<param name="row"> The row index of the tree position in the 2D Array </param>
+    ///<param name="column"> The column index of the tree position in the 2D Array </param>
     void removeTree(int row, int column);
 
     /// <summary>
@@ -81,3 +81,4 @@ public:
     void removeLast(void);
 };
 #endif
+
