@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "tree.h"
 
 bool Tree::setMoisture(void)
