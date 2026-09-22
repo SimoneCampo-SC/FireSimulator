@@ -100,7 +100,8 @@ On macOS or Linux:
 ```
 
 The application uses only the C++ standard library and does not require third-party dependencies.
-Technical concepts
+
+## Technical concepts
 This project demonstrates:
 - object-oriented C++;
 - grid-based simulation;
@@ -112,8 +113,7 @@ This project demonstrates:
 - file input/output;
 - random-number generation;
 - cross-platform console interaction.
-Project context
+
+## Project context
 This is an earlier C++ project preserved as part of my public engineering portfolio.
 Its main value is the combination of object-oriented modelling, explicit data-structure implementation and probabilistic simulation logic within a small self-contained application.
-
-
