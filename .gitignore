@@ -1,0 +1,18 @@
+# macOS
+.DS_Store
+
+# Xcode user-specific data
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad
+
+# Build output
+build/
+DerivedData/
+
+# C/C++
+*.o
+*.out
+
+# Generated runtime output
+statistics.txt
