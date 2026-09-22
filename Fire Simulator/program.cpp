@@ -1,6 +1,8 @@
 #include "program.h"
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
+#include <cctype>
 
 bool Program::chooseMode(string question)
 {
@@ -30,7 +32,11 @@ bool Program::chooseMode(string question)
             userChoice = 'x';
 
             // Clear the console showing the error
-            system("CLS");
+            #ifdef _WIN32
+                system("cls");
+            #else
+                system("clear");
+            #endif
             cout << "Not valid option" << endl;
             break;
         }
@@ -41,7 +47,11 @@ bool Program::chooseMode(string question)
 
 void Program::displayMenu(Wind* wind, int round)
 {
-    system("CLS");
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
     cout << "FIRE SIMULATOR\n----------------" << endl << endl;
     cout << "LEGEND" << endl;
 
@@ -112,7 +122,11 @@ bool Program::readStatistics(string fileName)
     ifstream inFile;
     string line;
 
-    system("CLS");
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
     inFile.open(fileName); // Open connection
 
     // The connection could not be opened for some reasons, it return false
