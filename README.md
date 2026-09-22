@@ -92,3 +92,28 @@ The simulator can also be compiled directly with a C++ compiler from the reposit
 
 ```bash
 g++ -std=c++11 "Fire Simulator/"*.cpp -o fire-simulator
+```
+
+On macOS or Linux:
+```bash
+./fire-simulator
+```
+
+The application uses only the C++ standard library and does not require third-party dependencies.
+Technical concepts
+This project demonstrates:
+- object-oriented C++;
+- grid-based simulation;
+- probabilistic state transitions;
+- discrete simulation timesteps;
+- pointers and dynamic memory;
+- custom linked-list implementation;
+- Singleton-style object management;
+- file input/output;
+- random-number generation;
+- cross-platform console interaction.
+Project context
+This is an earlier C++ project preserved as part of my public engineering portfolio.
+Its main value is the combination of object-oriented modelling, explicit data-structure implementation and probabilistic simulation logic within a small self-contained application.
+
+
