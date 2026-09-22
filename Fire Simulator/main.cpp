@@ -3,6 +3,8 @@
 #include "program.h"
 #include <iostream>
 #include <ctime>
+#include <cstdlib>
+#include <cctype>
 
 using namespace std;
 
