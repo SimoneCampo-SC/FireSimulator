@@ -87,25 +87,41 @@ int Forest::getBurningTrees(void) { return burningTrees; }
 
 bool Forest::updateForest(Wind* wind)
 {
-    bool finish = true;
+    std::vector<std::pair<int, int>> burningTreesAtStart;
 
-    // Iterate through the forest
+    // Capture the trees that are burning at the beginning of this round.
     for (int i = 0; i < 21; i++)
     {
         for (int j = 0; j < 21; j++)
         {
-            // If tree is burning, remove it from the list, burn its neighbours and set the array's cell as empty
             if (forestArray[i][j] == '#')
             {
-                burnNeighbour(i, j, wind);
-                list->removeTree(i, j);
-                forestArray[i][j] = ' ';
-                finish = false; // set to false as more trees ha
+                burningTreesAtStart.push_back({i, j});
             }
         }
     }
 
-    // Update counters each time the forest is updated
+    // Only trees that were already burning at the start of the round
+    // are allowed to spread the fire during this timestep.
+    for (const auto& position : burningTreesAtStart)
+    {
+        int row = position.first;
+        int column = position.second;
+
+        burnNeighbour(row, column, wind);
+    }
+
+    // Burning trees are consumed after propagation.
+    for (const auto& position : burningTreesAtStart)
+    {
+        int row = position.first;
+        int column = position.second;
+
+        list->removeTree(row, column);
+        forestArray[row][column] = ' ';
+    }
+
+    // Update statistics.
     liveTrees = list->countTrees();
     liveMoisture = list->countMoisture();
     liveDry = liveTrees - liveMoisture;
@@ -116,7 +132,7 @@ bool Forest::updateForest(Wind* wind)
 
     burningTrees = list->countBurning();
 
-    return finish;
+    return burningTrees == 0;
 }
 
 void Forest::burnNeighbour(int row, int column, Wind* wind)
