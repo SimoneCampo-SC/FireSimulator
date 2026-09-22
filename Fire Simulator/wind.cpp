@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "wind.h"
 
 Wind* Wind::_pointer = nullptr; // out of line definition of static pointer
